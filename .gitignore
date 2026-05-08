@@ -1,0 +1,7 @@
+DashcamV2/Config/Secrets.xcconfig
+
+build/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+.DS_Store

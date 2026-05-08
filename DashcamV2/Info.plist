@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>DashcamSSID</key>
+	<string>$(DASHCAM_AP_SSID)</string>
+	<key>FrontCamURL</key>
+	<string>$(DASHCAM_FRONT_CAM_URL)</string>
+	<key>RearCamURL</key>
+	<string>$(DASHCAM_REAR_CAM_URL)</string>
+</dict>
+</plist>
