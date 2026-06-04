@@ -2,64 +2,59 @@
 
 import SwiftUI
 
+enum CameraType: String, CaseIterable {
+    case front = "Front Camera"
+    case rear = "Rear Camera"
+}
+
 struct RecordingsView: View {
     @State private var selectedDate = Date.now
     
     private var cameraTypes = ["Front", "Rear"]
-    @State private var selectedCamera = "Front"
+    @State private var selectedCamera: CameraType = .front
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 10) {
                     HStack(spacing: 12) {
-                        Spacer()
-                        DatePicker(selection: $selectedDate, in: ...Date.now, displayedComponents: .date) {
-                            Label("Date", systemImage: "calendar")
-                                .fontWeight(.medium)
-                        }
-                        .datePickerStyle(.compact)
-                        .labelsHidden()
-                        .frame(width: 160)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(Color(.systemGroupedBackground))
-                        .cornerRadius(8)
+                        
+                        DatePicker("", selection: $selectedDate, in: ...Date.now, displayedComponents: .date)
+                            .datePickerStyle(.compact)
+                            .labelsHidden()
+                            .frame(width: 110, height: 35)
+                            .clipShape(Capsule())
+//                            .clipped()
                                                 
                         Menu {
-                            Picker("Select Camera", selection: $selectedCamera) {
-                                ForEach(cameraTypes, id: \.self) { cameraType in
-                                    Text(cameraType)
+                            ForEach(CameraType.allCases, id: \.self) { camera in
+                                Button(camera.rawValue) {
+                                    selectedCamera = camera
                                 }
                             }
                         } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: "web.camera")
-                                Text(selectedCamera)
-                                    .fontWeight(.medium)
-                                    .lineLimit(1)
-                                Image(systemName: "chevron.down")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                            .foregroundColor(.primary)
-                            .frame(width: 150)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 10)
-                            .background(Color(.systemGroupedBackground))
-                            .cornerRadius(8)
+                            Text(selectedCamera.rawValue)
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(.primary)
+                                .frame(width: 140, height: 35)
+                                .background(Color(.tertiarySystemFill))
+                                .clipShape(Capsule())
                         }
+                        .frame(width: 140, height: 35)
+                        .contentShape(Rectangle())
                         
                         Spacer()
                     }
-                    .padding(.top, 20)
+                    .padding(.top, 10)
+                    .padding(.leading)
                     
                     Spacer()
                 }
                     
                 HStack {
                     Text("Recorded Timespans")
-                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .font(.system(size: 20, weight: .bold, design: .monospaced))
                         .foregroundColor(.cyan)
                     Spacer()
                 }
@@ -67,15 +62,13 @@ struct RecordingsView: View {
                 
                 
                 
+                
                 Spacer()
             }
-            .padding()
-                
+            .navigationTitle("Recordings")
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.black, for: .navigationBar)
         }
-        .navigationTitle("Recordings")
-        .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(Color.black, for: .navigationBar)
-            
     }
 }
