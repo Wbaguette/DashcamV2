@@ -15,6 +15,9 @@ struct LogsView: View {
                 .padding()
             }
             .navigationTitle("System Logs")
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color.black, for: .navigationBar)
         }
     }
 }

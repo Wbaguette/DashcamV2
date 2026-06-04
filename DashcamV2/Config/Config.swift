@@ -33,4 +33,12 @@ enum Config {
         return url
     }()
     
+    static let playbackBaseURL: URL = {
+        guard let urlString = infoDictionary["PlaybackBaseURL"] as? String,
+              let url = URL(string: urlString.replacingOccurrences(of: " ", with: "")) else {
+            fatalError("PlaybackBaseURL is missing or invalid in Info.plist")
+        }
+        return url
+    }()
+    
 }

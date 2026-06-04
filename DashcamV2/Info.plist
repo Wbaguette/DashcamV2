@@ -6,6 +6,8 @@
 	<string>$(DASHCAM_AP_SSID)</string>
 	<key>FrontCamURL</key>
 	<string>$(DASHCAM_FRONT_CAM_URL)</string>
+	<key>PlaybackBaseURL</key>
+	<string>$(DASHCAM_PLAYBACK_BASE_URL)</string>
 	<key>RearCamURL</key>
 	<string>$(DASHCAM_REAR_CAM_URL)</string>
 </dict>
