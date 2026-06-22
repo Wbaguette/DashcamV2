@@ -8,8 +8,7 @@ struct ListEntry: Codable {
     let url: String
 }
 
-class MediaMTXClient {
-    
+class PlaybackClient {
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         
@@ -33,7 +32,51 @@ class MediaMTXClient {
         return try decoder.decode([ListEntry].self, from: jsonData)
     }
     
-    func listRecordings() {}
+    func listRecordings(date: Date, camera: CameraType) {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = .current
+        let startDateString = formatter.string(from: date)
+        
+        guard let endDate = Calendar.current.date(byAdding: .day, value: 1, to: date) else {
+            // TODO: some error banner
+            return
+        }
+        let endDateString = formatter.string(from: endDate)
+        
+        var path = ""
+        switch camera {
+            case .front:
+                path = "cam1audio"
+            case .rear:
+                path = "cam2audio"
+        }
+        
+        
+        var url = Config.playbackBaseURL
+        url.append(queryItems: [
+            URLQueryItem(name: "path", value: path),
+            URLQueryItem(name: "start", value: startDateString),
+            URLQueryItem(name: "end", value: endDateString),
+        ])
+        
+        print(url)
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            guard let data = data else {
+                print("No data received")
+                return
+            }
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Success! Data received:\n\(jsonString)")
+            }
+        }
+        
+        task.resume()
+    }
     
     func downloadRecording() {}
 }

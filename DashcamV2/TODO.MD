@@ -1,5 +1,11 @@
 # TODO
 
+
+Want some general error banner to display to user when internal stuff fails (time conversions, error checks, etc)
+
+Get rid of time component when querying for recording timespans
+Fix calendar picker not being right size
+
 Recordings download client
 need a refresh button maybe 
 API responses:
@@ -12,5 +18,4 @@ USB camera -> can we get a smaller cord? that'd probably help it
 CSI camera -> can we get a smaller CSI cord?
 
 
-Include (EST) on all things time, need to do this in dashcam text overlay
 Calculate reasonable retention rate of videos
