@@ -35,12 +35,14 @@ class PlaybackClient {
     func listRecordings(date: Date, camera: CameraType) {
         let formatter = ISO8601DateFormatter()
         formatter.timeZone = .current
-        let startDateString = formatter.string(from: date)
-        
-        guard let endDate = Calendar.current.date(byAdding: .day, value: 1, to: date) else {
+    
+        let startDate = Calendar.current.startOfDay(for: date)
+        guard let endDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate) else {
             // TODO: some error banner
             return
         }
+        
+        let startDateString = formatter.string(from: startDate)
         let endDateString = formatter.string(from: endDate)
         
         var path = ""
@@ -51,6 +53,9 @@ class PlaybackClient {
                 path = "cam2audio"
         }
         
+        if path == "" {
+            // TODO: Some error/warning banner
+        }
         
         var url = Config.playbackBaseURL
         url.append(queryItems: [

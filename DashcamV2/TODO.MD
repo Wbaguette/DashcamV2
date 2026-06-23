@@ -3,7 +3,6 @@
 
 Want some general error banner to display to user when internal stuff fails (time conversions, error checks, etc)
 
-Get rid of time component when querying for recording timespans
 Fix calendar picker not being right size
 
 Recordings download client
