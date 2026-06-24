@@ -18,11 +18,11 @@ struct StatusDetailSheet: View {
             }
             .listStyle(.plain)
             
-            Button("Dismiss") {
-                dismiss()
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.orange)
+//            Button("Dismiss") {
+//                dismiss()
+//            }
+//            .buttonStyle(.borderedProminent)
+//            .tint(.orange)
         }
         .padding()
         .preferredColorScheme(.dark)

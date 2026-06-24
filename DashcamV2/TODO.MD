@@ -1,7 +1,7 @@
 # TODO
 
-
-Want some general error banner to display to user when internal stuff fails (time conversions, error checks, etc)
+1. Style Warning banner better
+2. Properly use warning banner across all components (look for "if lets" and "guard")
 
 Fix calendar picker not being right size
 

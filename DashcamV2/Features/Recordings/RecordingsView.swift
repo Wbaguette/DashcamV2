@@ -5,9 +5,19 @@ import SwiftUI
 enum CameraType: String, CaseIterable {
     case front = "Front Camera"
     case rear = "Rear Camera"
+    
+    func path() -> String {
+        switch self {
+        case .front:
+            return "cam1audio"
+        case .rear:
+            return "cam2audio"
+        }
+    }
 }
 
 struct RecordingsView: View {
+    @EnvironmentObject var warningManager: AppWarningManager
     @State private var selectedDate = Date.now
     @State private var selectedCamera: CameraType = .front
     
@@ -59,7 +69,7 @@ struct RecordingsView: View {
                         .contentShape(Rectangle())
                         
                         Button {
-                            playbackClient.listRecordings(date: selectedDate, camera: selectedCamera)
+                            playbackClient.listRecordings(date: selectedDate, camera: selectedCamera, warningManager: warningManager)
                         } label: {
                             Image(systemName: "magnifyingglass")
                                 .font(.body)

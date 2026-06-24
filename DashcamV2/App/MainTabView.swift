@@ -5,6 +5,7 @@ import SwiftUI
 struct MainTabView: View {
     @EnvironmentObject  var monitor: DashcamMonitor
     @State private var selectedTab = 0
+    @StateObject private var warningManager = AppWarningManager()
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -26,6 +27,7 @@ struct MainTabView: View {
                 }
                 .tag(2)
         }
+        .environmentObject(warningManager)
         .safeAreaInset(edge: .top) {
             HStack {
                 Spacer()
@@ -34,6 +36,11 @@ struct MainTabView: View {
         }
         .preferredColorScheme(.dark)
         .accentColor(.cyan)
+        .sheet(item: $warningManager.activeWarning) { warning in
+            WarningPopup(message: warning.text)
+                .presentationDetents([.height(300), .medium])
+                .presentationDragIndicator(.visible)
+        }
     }
     
     init() {

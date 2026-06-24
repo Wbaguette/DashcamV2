@@ -1,6 +1,7 @@
 // Author: Jean-Pierre
 
 import Foundation
+import SwiftUI
 
 struct ListEntry: Codable {
     let start: Date
@@ -32,34 +33,24 @@ class PlaybackClient {
         return try decoder.decode([ListEntry].self, from: jsonData)
     }
     
-    func listRecordings(date: Date, camera: CameraType) {
+    func listRecordings(date: Date, camera: CameraType, warningManager: AppWarningManager) {
         let formatter = ISO8601DateFormatter()
         formatter.timeZone = .current
     
         let startDate = Calendar.current.startOfDay(for: date)
         guard let endDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate) else {
-            // TODO: some error banner
+            DispatchQueue.main.async{
+                warningManager.show(message: "Failed to calculate timespan end date, invalid start date")
+            }
             return
         }
         
         let startDateString = formatter.string(from: startDate)
         let endDateString = formatter.string(from: endDate)
         
-        var path = ""
-        switch camera {
-            case .front:
-                path = "cam1audio"
-            case .rear:
-                path = "cam2audio"
-        }
-        
-        if path == "" {
-            // TODO: Some error/warning banner
-        }
-        
         var url = Config.playbackBaseURL
         url.append(queryItems: [
-            URLQueryItem(name: "path", value: path),
+            URLQueryItem(name: "path", value: camera.path()),
             URLQueryItem(name: "start", value: startDateString),
             URLQueryItem(name: "end", value: endDateString),
         ])
@@ -68,11 +59,15 @@ class PlaybackClient {
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    warningManager.show(message: "Error: \(error.localizedDescription)")
+                }
                 return
             }
             guard let data = data else {
-                print("No data received")
+                DispatchQueue.main.async {
+                    warningManager.show(message: "No data received.")
+                }
                 return
             }
             if let jsonString = String(data: data, encoding: .utf8) {
@@ -83,5 +78,7 @@ class PlaybackClient {
         task.resume()
     }
     
-    func downloadRecording() {}
+    func downloadRecording() {
+        //TODO
+    }
 }
