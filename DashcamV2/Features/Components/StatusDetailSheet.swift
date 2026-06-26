@@ -5,8 +5,6 @@ import SwiftUI
 struct StatusDetailSheet: View {
     @EnvironmentObject var monitor: DashcamMonitor
     
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
         VStack(spacing: 16) {
             Text("Connection Status")
@@ -18,11 +16,6 @@ struct StatusDetailSheet: View {
             }
             .listStyle(.plain)
             
-//            Button("Dismiss") {
-//                dismiss()
-//            }
-//            .buttonStyle(.borderedProminent)
-//            .tint(.orange)
         }
         .padding()
         .preferredColorScheme(.dark)

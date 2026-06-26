@@ -38,7 +38,7 @@ struct MainTabView: View {
         .accentColor(.cyan)
         .sheet(item: $warningManager.activeWarning) { warning in
             WarningPopup(message: warning.text)
-                .presentationDetents([.height(300), .medium])
+                .presentationDetents([.height(280), .medium])
                 .presentationDragIndicator(.visible)
         }
     }

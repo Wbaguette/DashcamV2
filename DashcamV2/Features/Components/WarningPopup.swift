@@ -22,41 +22,28 @@ struct WarningPopup: View {
     var body: some View {
         VStack(spacing: 20) {
             
-            VStack(spacing: 8) {
+            HStack(spacing: 8) {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 48))
+                    .font(.system(size: 28))
                     .symbolRenderingMode(.multicolor)
                 
                 Text("Warning")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
+                
             }
             .padding(.top, 10)
             
             ScrollView {
                 Text(message)
                     .font(.callout)
-                    .multilineTextAlignment(.center)
+                    .multilineTextAlignment(.leading)
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
                     .fixedSize(horizontal: false, vertical: true)
             }
             
-            Spacer()
-            
-            Button {
-                dismiss()
-            } label: {
-                Text("Dismiss")
-                    .font(.headline)
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(Color.yellow)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .padding(.bottom, 10)
         }
         .padding(.horizontal, 24)
         .padding(.top, 24)

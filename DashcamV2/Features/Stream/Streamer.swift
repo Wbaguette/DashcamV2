@@ -43,6 +43,12 @@ struct DashcamWebView: UIViewRepresentable {
                 if let trust = challenge.protectionSpace.serverTrust {
                     completionHandler(.useCredential, URLCredential(trust: trust))
                     return
+                } else {
+                    DispatchQueue.main.async {
+                        //TODO: Inject warning manager somehow here
+                        warningManager.show(message: "Failed to get state of the servers SSL transaction state")
+                    }
+                    return
                 }
             }
             completionHandler(.performDefaultHandling, nil)

@@ -22,8 +22,9 @@ class PlaybackClient {
             
             if let date = formatter.date(from: dateString) {
                 return date
+            } else {
+                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateString)")
             }
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateString)")
         }
         
         return decoder
@@ -60,11 +61,12 @@ class PlaybackClient {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async {
-                    warningManager.show(message: "Error: \(error.localizedDescription)")
+                    warningManager.show(message: error.localizedDescription)
                 }
                 return
             }
             guard let data = data else {
+                // TODO: instead of warning message, display "No Timespans Found" to the user where the timespans normally would be
                 DispatchQueue.main.async {
                     warningManager.show(message: "No data received.")
                 }

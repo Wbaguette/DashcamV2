@@ -51,11 +51,6 @@ struct StreamView: View {
             DashcamWebView(url: url)
                 .frame(maxWidth: .infinity)
                 .aspectRatio(16/9, contentMode: .fit)
-                .cornerRadius(15)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
                 .padding(.horizontal)
         }
     }

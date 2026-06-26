@@ -23,7 +23,7 @@ struct ConnectionStatusPill: View {
         }
         .sheet(isPresented: $showDetails) {
             StatusDetailSheet()
-                .presentationDetents([.height(250)])
+                .presentationDetents([.height(180)])
                 .presentationDragIndicator(.visible)
         }
     }
