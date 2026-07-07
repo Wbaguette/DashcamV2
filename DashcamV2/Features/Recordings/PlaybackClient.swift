@@ -9,7 +9,27 @@ struct ListEntry: Codable {
     let url: String
 }
 
-class PlaybackClient {
+struct FailableDecodable<Base: Decodable>: Decodable {
+    let base: Base?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        do {
+            self.base = try container.decode(Base.self)
+        } catch {
+            print("Skipping entry due to error: \(error)")
+            self.base = nil
+        }
+    }
+}
+
+class PlaybackClient: NSObject, URLSessionDelegate {
+    
+    private lazy var session: URLSession = {
+        let config = URLSessionConfiguration.default
+        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
+    }()
+    
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         
@@ -30,8 +50,33 @@ class PlaybackClient {
         return decoder
     }()
     
-    func parseEntries(from jsonData: Data) throws -> [ListEntry] {
-        return try decoder.decode([ListEntry].self, from: jsonData)
+    func parseEntries(from jsonData: Data) -> [ListEntry] {
+        do {
+            let failbleEntries = try decoder.decode([FailableDecodable<ListEntry>].self, from: jsonData)
+            return failbleEntries.compactMap { $0.base }
+        } catch {
+            // TODO: inject warning manager somehow
+            print("Failed to decode the JSON entirely: \(error)")
+            return []
+        }
+        
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+            if let trust = challenge.protectionSpace.serverTrust {
+                completionHandler(.useCredential, URLCredential(trust: trust))
+                return
+            } else {
+                DispatchQueue.main.async {
+                    // TODO: inject warning manager somehow
+//                    warningManager.show(message: "Failed to get state of the servers SSL transaction state")
+                }
+                return
+            }
+        }
+        
+        completionHandler(.cancelAuthenticationChallenge, nil)
     }
     
     func listRecordings(date: Date, camera: CameraType, warningManager: AppWarningManager) {
@@ -58,13 +103,17 @@ class PlaybackClient {
         
         print(url)
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        let task = session.dataTask(with: url) { data, response, error in
+            // TODO: Map status codes to a display, not a warning popup
+            let status = (response as! HTTPURLResponse).statusCode
+            
             if let error = error {
                 DispatchQueue.main.async {
                     warningManager.show(message: error.localizedDescription)
                 }
                 return
             }
+            
             guard let data = data else {
                 // TODO: instead of warning message, display "No Timespans Found" to the user where the timespans normally would be
                 DispatchQueue.main.async {
@@ -72,9 +121,9 @@ class PlaybackClient {
                 }
                 return
             }
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Success! Data received:\n\(jsonString)")
-            }
+            
+            let timespanEntries = self.parseEntries(from: data)
+        
         }
         
         task.resume()

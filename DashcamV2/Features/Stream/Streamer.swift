@@ -6,6 +6,7 @@ import WebKit
 let sharedProcessPool = WKProcessPool()
 
 struct DashcamWebView: UIViewRepresentable {
+    @EnvironmentObject var warningManager: AppWarningManager
     let url: URL
     
     func makeCoordinator() -> Coordinator {
@@ -37,7 +38,7 @@ struct DashcamWebView: UIViewRepresentable {
     
     class Coordinator: NSObject, WKNavigationDelegate {
         func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-            
+                        
             // This bypasses the -1202 error for self-signed certs
             if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
                 if let trust = challenge.protectionSpace.serverTrust {
@@ -45,8 +46,8 @@ struct DashcamWebView: UIViewRepresentable {
                     return
                 } else {
                     DispatchQueue.main.async {
-                        //TODO: Inject warning manager somehow here
-                        warningManager.show(message: "Failed to get state of the servers SSL transaction state")
+                        // TODO: inject warning manager somehow
+//                        warningManager.show(message: "Failed to get state of the servers SSL transaction state")
                     }
                     return
                 }
